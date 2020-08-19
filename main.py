@@ -8,6 +8,7 @@ import pandas as pd
 
 
 
+
 def get_bookinfo(bookinfo):
     # 获取作者信息
     author_result = bookinfo.find('script', {'type': 'application/ld+json'})
@@ -70,8 +71,29 @@ def bookname_clean(bookname):
 
 
 if __name__ == "__main__":
-    excel_filepath = input("请输入包含书名的excel文件路径：\n")
-    colname = input("指定excel文件中的书名所在的列名，默认为【书名】") or "书名"
+    import PySimpleGUI as sg
+
+    sg.theme('green')  # please make your windows colorful
+
+    layout = [[sg.Text('请输入包含书名的excel文件路径')],
+                [sg.Input(), sg.FileBrowse()],
+                [sg.OK(), sg.Cancel()] ]
+
+    window = sg.Window('Get filename example', layout)
+    event, values = window.read()
+    window.close()
+    excel_filepath = values[0]
+    print(excel_filepath)
+    layout = [[sg.Text('输入excel文件中书名所在的列名')],
+          [sg.Input("书名")],
+          [sg.OK()] ]
+
+    window = sg.Window('指定excel文件中的书名所在的列名，默认为【书名】', layout)
+
+    event, values = window.read()
+
+    window.close()
+    colname = values[0] or "书名"
     if len(colname.strip()) == 0:
         colname = "书名"
     df = pd.read_excel(excel_filepath.strip())
